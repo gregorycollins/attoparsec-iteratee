@@ -1,0 +1,35 @@
+name:           attoparsec-iteratee
+version:        0.1
+synopsis:       An adapter to convert attoparsec Parsers into blazing-fast Iteratees
+description:
+  An adapter to convert attoparsec Parsers into blazing-fast Iteratees
+license:        BSD3
+license-file:   LICENSE
+author:         Gregory Collins
+maintainer:     greg@gregorycollins.net
+build-type:     Simple
+cabal-version:  >= 1.6
+homepage:       http://github.com/gregorycollins
+category:       Data
+
+
+Library
+  hs-source-dirs: src
+
+  exposed-modules:
+    Data.Attoparsec.Iteratee
+
+  build-depends:
+    attoparsec >= 0.8 && < 0.9,
+    base >= 4 && < 5,
+    bytestring,
+    iteratee >= 0.3.1 && <0.4,
+    monads-fd,
+    transformers
+
+  ghc-options: -Wall -fwarn-tabs -funbox-strict-fields -O2
+
+
+source-repository head
+  type:     git
+  location: git://github.com/gregorycollins/attoparsec-iteratee.git
