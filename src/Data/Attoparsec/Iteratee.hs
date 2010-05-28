@@ -26,7 +26,7 @@ parserToIteratee p = IterateeG $ f (\s -> parse p s)
          (ByteString -> Atto.Result a)
       -> Stream
       -> m (IterV m a)
-    f k (EOF Nothing)  = finalChunk $ k S.empty
+    f k (EOF Nothing)  = finalChunk $ feed (k S.empty) S.empty
     f _ (EOF (Just e)) = reportError e
     f k (Chunk s)      = let s' = S.concat $ L.toChunks $ fromWrap s
                          in if S.null s'
