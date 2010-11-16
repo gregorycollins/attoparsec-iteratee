@@ -39,8 +39,11 @@ parserToIteratee p = IterateeG $ f (\s -> parse p s)
         return $ Cont (error $ show m)
                       (Just $ Err m)
 
-    finalChunk (Atto.Done rest r) =
-        return $ Done r (Chunk $ toWrap $ L.fromChunks [rest])
+    finalChunk (Atto.Done rest r)
+        | S.null rest =
+            return $ Done r (EOF Nothing)
+        | otherwise =
+            return $ Done r (Chunk $ toWrap $ L.fromChunks [rest])
 
     finalChunk (Atto.Partial _) =
         return $ Cont (error "parser did not produce a value")
