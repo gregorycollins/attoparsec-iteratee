@@ -1,5 +1,5 @@
 name:           attoparsec-iteratee
-version:        0.1.2
+version:        0.2.0
 synopsis:       An adapter to convert attoparsec Parsers into blazing-fast Iteratees
 description:
   An adapter to convert attoparsec Parsers into blazing-fast Iteratees
@@ -23,7 +23,7 @@ Library
     attoparsec >= 0.8 && < 0.9,
     base >= 4 && < 5,
     bytestring,
-    iteratee >= 0.3.1 && <0.4,
+    iteratee >= 0.7 && <0.8,
     monads-fd,
     transformers
 
