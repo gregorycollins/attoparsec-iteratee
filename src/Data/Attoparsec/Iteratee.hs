@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+-- | A function to convert attoparsec 'Parser's into 'Iteratee's.
 module Data.Attoparsec.Iteratee
   ( ParseError(..), parserToIteratee ) where
 
@@ -19,20 +20,26 @@ data ParseError
 
 instance Exception ParseError
 
+-- | A function to convert attoparsec 'Parser's into 'Iteratee's.
 parserToIteratee :: (Monad m) =>
                     Parser a
                  -> Iteratee ByteString m a
-parserToIteratee p = icont (f (parse p)) Nothing
-                     where f k (EOF Nothing) = case feed (k B.empty) B.empty of
-                               Atto.Fail _ err dsc -> throwErr (toException $ ParseError err dsc)
-                               Atto.Partial _ -> throwErr (toException EofException)
-                               Atto.Done rest v
-                                   | B.null rest -> idone v (EOF Nothing)
-                                   | otherwise -> idone v (Chunk rest)
-                           f _ (EOF (Just e)) = throwErr e
-                           f k (Chunk s)
-                               | B.null s = icont (f k) Nothing
-                               | otherwise = case k s of
-                                   Atto.Fail _ err dsc -> throwErr (toException $ ParseError err dsc)
-                                   Atto.Partial k' -> icont (f k') Nothing
-                                   Atto.Done rest v -> idone v (Chunk rest)
+parserToIteratee p =
+    icont (f (parse p)) Nothing
+  where
+    f k (EOF Nothing) =
+        case feed (k B.empty) B.empty of
+          Atto.Fail _ err dsc -> throwErr (toException $ ParseError err dsc)
+          Atto.Partial _ -> throwErr (toException EofException)
+          Atto.Done rest v
+              | B.null rest -> idone v (EOF Nothing)
+              | otherwise -> idone v (Chunk rest)
+    f _ (EOF (Just e)) = throwErr e
+    f k (Chunk s)
+        | B.null s = icont (f k) Nothing
+        | otherwise =
+            case k s of
+              Atto.Fail _ err dsc -> throwErr (toException $
+                                               ParseError err dsc)
+              Atto.Partial k' -> icont (f k') Nothing
+              Atto.Done rest v -> idone v (Chunk rest)
