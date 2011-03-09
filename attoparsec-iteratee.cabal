@@ -23,7 +23,7 @@ Library
     attoparsec >= 0.8 && < 0.9,
     base >= 4 && < 5,
     bytestring,
-    iteratee >= 0.7 && <0.8,
+    iteratee >= 0.7 && <0.9,
     monads-fd,
     transformers
 
